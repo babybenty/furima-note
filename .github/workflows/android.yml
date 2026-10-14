@@ -14,12 +14,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 21
@@ -44,7 +44,12 @@ jobs:
           ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/upload.jks
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           VERSION_CODE: ${{ github.run_number }}
-        run: ./gradlew --no-daemon bundleRelease
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon bundleRelease 2>&1 | tee "$RUNNER_TEMP/gradle.log" || {
+            grep -A25 "What went wrong" "$RUNNER_TEMP/gradle.log" | head -40 | while IFS= read -r l; do echo "::error::$l"; done
+            exit 1
+          }
       - uses: actions/upload-artifact@v4
         if: steps.key.outputs.signed == 'true'
         with:
@@ -55,7 +60,13 @@ jobs:
         working-directory: android
         env:
           VERSION_CODE: ${{ github.run_number }}
-        run: ./gradlew --no-daemon assembleDebug
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon assembleDebug 2>&1 | tee "$RUNNER_TEMP/gradle.log" || {
+            # 失敗理由を注釈に出す（ログを開かなくても原因が分かるように）
+            grep -A25 "What went wrong" "$RUNNER_TEMP/gradle.log" | head -40 | while IFS= read -r l; do echo "::error::$l"; done
+            exit 1
+          }
       - uses: actions/upload-artifact@v4
         with:
           name: furimacho-${{ github.run_number }}-debug-apk
