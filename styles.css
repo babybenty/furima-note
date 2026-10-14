@@ -1,7 +1,7 @@
 :root{--bg:#f5f7f7;--card:#fff;--fg:#1c2526;--sub:#5f6b6d;--line:#dde3e4;--accent:#0f766e;--accent-fg:#fff;--pos:#0f766e;--neg:#c2410c;--pro:#b45309}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1415;--card:#182022;--fg:#e6eced;--sub:#9aa7a9;--line:#2a3537;--accent:#2dd4bf;--accent-fg:#06201d;--pos:#2dd4bf;--neg:#fb923c;--pro:#fbbf24}}
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;background:var(--bg);color:var(--fg);padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+body{margin:0;font-family:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;background:var(--bg);color:var(--fg);padding-bottom:calc(64px + env(safe-area-inset-bottom))}
 .top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--accent);color:var(--accent-fg)}
 .top h1{margin:0;font-size:18px}
 .badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;border:1px solid currentColor}
@@ -48,3 +48,5 @@ dialog::backdrop{background:rgba(0,0,0,.4)}
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px}
 h3{margin:14px 0 8px;font-size:15px}h3:first-child{margin-top:0}h4{font-size:13px;margin:12px 0 4px}
 .links{text-align:center;font-size:12px}.links a{color:var(--sub)}
+.btn.disabled{opacity:.5;pointer-events:none}
+input,select,button,textarea{font-family:inherit}

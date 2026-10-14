@@ -16,9 +16,9 @@
 ## 収益モデル
 
 - **無料版**：登録30件まで・広告あり（集客の入口）
-- **PRO**：月額 ¥380 または 買い切り ¥2,980（既存の買い切り3,600円より安くして乗り換えを狙う）
+- **PRO**：買い切り ¥2,980（既存の買い切り3,600円より安くして乗り換えを狙う。月額プランは、キーの自動更新の仕組みができてから検討）
   - 登録無制限 / 確定申告CSV / 販売先別の分析 / 滞留在庫アラート / 広告なし
-- 試算：PRO買い切り 月20本＋月額 50人 ≒ 月7.8万円
+- 試算：PRO買い切り 月20本 ≒ 月6万円
 
 ## 機能
 
@@ -31,20 +31,21 @@
 
 ## 公開手順
 
-**詳しいチェックリストは [LAUNCH.md](LAUNCH.md) にあります。**
+**販売開始までの手順は [LAUNCH.md](LAUNCH.md) にまとめています。**
 
-ファイル構成：`index.html`（アプリ本体） / `about.html`（紹介ページ） / `privacy.html`・`tokushoho.html`（法定ページ。【記入】欄を埋めてから公開） / `.github/workflows/pages.yml`（mainにpushするとGitHub Pagesへ自動公開）
-
-
-1. `config.js` の `buyMonthlyUrl` / `buyLifetimeUrl` を Stripe Payment Links などの購入URLにする
-2. `licenseSalt` を推測されにくい値に変える
-3. キーを発行する：`LICENSE_SALT=<同じ値> node tools/keygen.js 100`
-   - 購入完了メールでキーを送る（Stripeの購入後ページや、Lemon Squeezyのライセンス機能を使う）
-4. GitHub Pages / Cloudflare Pages / Netlify に静的ファイルとしてそのまま置く
-5. 集客：X・note・YouTubeの「せどり」「メルカリ 利益計算」系キーワードで、使い方記事を書く
+| ファイル | 役割 |
+|---|---|
+| `index.html` / `app.js` / `styles.css` | アプリ本体 |
+| `about.html` / `lp.css` / `img/` | 紹介ページ（OGP画像つき） |
+| `license.js` | ライセンスの署名と検証（ECDSA P-256） |
+| `issuer.html` | 運営者専用のキー発行ページ。秘密鍵は運営者のブラウザ内だけに保存 |
+| `thanks.html` | Stripeで購入したあとに表示するページ |
+| `privacy.html` / `tokushoho.html` | 法定ページ |
+| `config.js` | 購入URLと公開鍵 |
+| `.github/workflows/pages.yml` | mainにpushするとGitHub Pagesへ自動公開 |
 
 ## 注意点と今後の改善
 
-- **ライセンスは端末内だけで検証している**ため、コードを読めば突破できる。MVPとしては割り切り。売れ始めたら Lemon Squeezy の License API などでサーバー検証にする
+- ライセンスは電子署名で検証している。秘密鍵がなければキーを作れないが、アプリのコードを書き換えればPROの機能を解除できてしまう（ブラウザで動くアプリの限界）。少額の買い切りなので、MVPとしてはこれで十分と判断
 - 手数料と送料の初期値は2026年10月時点の公開料金をもとにしている。公開前に各サービスの公式ページで確認すること
 - 今後の候補：バーコードで商品登録、複数端末の同期（有料機能）、ネイティブアプリ化（Capacitor）

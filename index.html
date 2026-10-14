@@ -7,6 +7,9 @@
 <meta name="description" content="メルカリ・ラクマ・Yahoo!フリマの利益計算と在庫管理をひとつに。確定申告用CSVも出せる個人セラー向けアプリ。">
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -90,11 +93,12 @@
         <li>広告なし</li>
       </ul>
       <div class="row">
-        <a id="buyMonthly" class="btn" target="_blank" rel="noopener">月額 ¥380</a>
-        <a id="buyLifetime" class="btn secondary" target="_blank" rel="noopener">買い切り ¥2,980</a>
+        <a id="buyLifetime" class="btn" target="_blank" rel="noopener">買い切り ¥2,980 で購入</a>
+        <a id="buyMonthly" class="btn secondary" target="_blank" rel="noopener" hidden>月額プラン</a>
       </div>
-      <label>ライセンスキー<input id="licenseInput" placeholder="FRM-XXXX-XXXX-XXXX"></label>
+      <label>ライセンスキー<input id="licenseInput" placeholder="購入メールのキーを貼り付け"></label>
       <button id="activate" class="secondary">PROを有効化</button>
+      <p class="hint">購入後のメールにある「有効化リンク」を、このアプリを使う端末で開くと自動で有効になります。</p>
       <p class="hint" id="licenseMsg"></p>
     </div>
     <div class="card">
@@ -158,6 +162,7 @@
 </dialog>
 
 <script src="config.js"></script>
+<script src="license.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

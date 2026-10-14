@@ -2,82 +2,231 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>フリマ帳 | メルカリ・ラクマの利益計算と在庫管理アプリ</title>
-<meta name="description" content="メルカリ・ラクマ・Yahoo!フリマの手数料と送料を引いた利益をすぐ計算。在庫と売上を記録して、確定申告用のCSVも出せる。インストール不要・無料で始められます。">
-<meta property="og:title" content="フリマ帳 | フリマの利益計算と在庫管理">
-<meta property="og:description" content="手数料・送料込みの利益計算、在庫管理、確定申告用CSVをひとつに。">
+<meta name="description" content="メルカリ・ラクマ・Yahoo!フリマの手数料と送料を引いた利益をすぐ計算。在庫と売上を記録して、確定申告用のCSVも出せる。登録不要・無料で始められます。">
+<link rel="canonical" href="https://babybenty.github.io/furima-note/about.html">
+<meta property="og:title" content="フリマ帳 | 売れたあと、いくら残る？がすぐ分かる">
+<meta property="og:description" content="手数料・送料込みの利益計算、在庫管理、確定申告用CSVをひとつに。登録不要・無料で始められます。">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://babybenty.github.io/furima-note/about.html">
+<meta property="og:image" content="https://babybenty.github.io/furima-note/img/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0f766e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="page.css">
+<link rel="stylesheet" href="lp.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"SoftwareApplication","name":"フリマ帳","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":[{"@type":"Offer","price":"0","priceCurrency":"JPY"},{"@type":"Offer","price":"2980","priceCurrency":"JPY"}]}
 </script>
 </head>
 <body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="logo" href="about.html"><img src="icon.svg" alt="">フリマ帳</a>
+    <div class="nav-links">
+      <a class="hide-sm" href="#features">機能</a>
+      <a class="hide-sm" href="#pricing">料金</a>
+      <a class="hide-sm" href="#faq">よくある質問</a>
+      <a class="btn btn-primary btn-sm" href="./">無料で使う</a>
+    </div>
+  </div>
+</nav>
+
 <header class="hero">
   <div class="wrap">
-    <h1>売れたあと、<br>いくら残る？がすぐ分かる。</h1>
-    <p>メルカリ・ラクマ・Yahoo!フリマの手数料と送料を引いた利益計算、在庫管理、確定申告用のCSV出力を、ひとつのアプリで。</p>
-    <a class="cta" href="./">無料で使ってみる</a>
+    <div>
+      <span class="eyebrow">メルカリ・ラクマ・Yahoo!フリマ対応</span>
+      <h1>売れたあと、<br><em>いくら残る？</em><br>がすぐ分かる。</h1>
+      <p class="lead">手数料と送料を引いた利益計算、在庫管理、確定申告用のCSV出力まで。フリマで売る人のための、いちばん手軽な帳簿アプリです。</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="./">無料で使ってみる →</a>
+        <a class="btn btn-ghost" href="#features">機能を見る</a>
+      </div>
+      <ul class="chips">
+        <li>登録不要</li><li>30件まで無料</li><li>オフライン対応</li><li>データは端末内だけ</li>
+      </ul>
+    </div>
+    <div class="phone"><img src="img/screen-calc.webp" alt="フリマ帳の利益計算画面。販売価格9,800円で利益3,740円と表示" width="390" height="780"></div>
   </div>
 </header>
 
-<main class="wrap">
-  <section>
-    <h2>こんな悩み、ありませんか？</h2>
-    <div class="grid">
-      <div class="box"><h3>値付けに迷う</h3><p>手数料と送料を引くと、思ったより利益が残らない。</p></div>
-      <div class="box"><h3>在庫が把握できない</h3><p>何をいくらで仕入れたか、どれが売れ残っているか分からない。</p></div>
-      <div class="box"><h3>確定申告が面倒</h3><p>1年分の売上と経費を、あとから集めるのが大変。</p></div>
-    </div>
-  </section>
-
-  <section>
-    <h2>フリマ帳でできること</h2>
-    <div class="grid">
-      <div class="box"><h3>利益をその場で計算</h3><p>販売先と配送方法を選ぶだけで、手数料・送料込みの利益と利益率を表示します。</p></div>
-      <div class="box"><h3>適正価格を逆算</h3><p>「利益率30%を取るにはいくらで売ればいいか」を自動で計算します。</p></div>
-      <div class="box"><h3>在庫と売上を記録</h3><p>在庫・出品中・売却済を管理。月別の利益グラフで成績が一目で分かります。</p></div>
-      <div class="box"><h3>確定申告用CSV</h3><p>売上・仕入・手数料・送料を年ごとにExcel形式で出力できます。（PRO）</p></div>
-      <div class="box"><h3>売れ残りに気づける</h3><p>仕入れから60日を過ぎた在庫を一覧表示。値下げのタイミングを逃しません。（PRO）</p></div>
-      <div class="box"><h3>登録不要・端末内保存</h3><p>アカウント作成なしですぐ使えます。データはあなたの端末の中だけに保存されます。</p></div>
-    </div>
-  </section>
-
-  <section>
-    <h2>料金</h2>
-    <div class="grid">
-      <div class="box">
-        <h3>無料</h3>
-        <div class="price">¥0</div>
-        <ul><li>利益計算・価格の逆算</li><li>商品登録 30件まで</li><li>月別の利益集計</li></ul>
-      </div>
-      <div class="box pro">
-        <h3>PRO</h3>
-        <div class="price">¥380<small> / 月</small></div>
-        <div class="price">¥2,980<small> 買い切り</small></div>
-        <ul><li>商品登録 無制限</li><li>確定申告用CSV</li><li>販売先別の分析・滞留在庫アラート</li><li>広告なし</li></ul>
+<main>
+  <section class="block">
+    <div class="wrap center">
+      <p class="kicker">PROBLEM</p>
+      <h2>フリマで売っていて、こんなこと ありませんか？</h2>
+      <p class="section-lead">売上は増えているのに、手元にいくら残っているのかが分からない。多くの出品者がつまずくポイントです。</p>
+      <div class="pains" style="text-align:left">
+        <div class="pain"><div class="icon">🤔</div><p class="q">値付けに迷う</p><p>手数料10%と送料を引くと、思ったより利益が残らなかった…</p></div>
+        <div class="pain"><div class="icon">📦</div><p class="q">在庫が分からない</p><p>何をいくらで仕入れたか、どれが売れ残っているか把握できない。</p></div>
+        <div class="pain"><div class="icon">🧾</div><p class="q">確定申告がつらい</p><p>1年分の売上と経費を、年明けにかき集めるのが大変。</p></div>
       </div>
     </div>
   </section>
 
-  <section>
-    <h2>よくある質問</h2>
-    <details><summary>アプリのインストールは必要ですか？</summary><p>ブラウザで開くだけで使えます。スマホの「ホーム画面に追加」をすると、アプリのように起動でき、オフラインでも動きます。</p></details>
-    <details><summary>データはどこに保存されますか？</summary><p>お使いの端末のブラウザ内にだけ保存され、運営者のサーバーには送信されません。機種変更の前には、設定画面の「バックアップ」で保存してください。</p></details>
-    <details><summary>手数料や送料が変わったら？</summary><p>設定画面で、販売先ごとの手数料と配送方法ごとの送料を自由に変更できます。</p></details>
-    <details><summary>このCSVだけで確定申告できますか？</summary><p>売上や経費を集計する材料としてお使いいただけます。申告の要否や具体的な処理は、税務署や税理士にご確認ください。</p></details>
+  <section class="block alt" id="features">
+    <div class="wrap">
+      <div class="center">
+        <p class="kicker">FEATURES</p>
+        <h2>計算・記録・申告を、ひとつの流れで。</h2>
+        <p class="section-lead">利益計算だけのアプリでは記録が残らず、表計算ソフトは作るのが手間。フリマ帳は、計算したらそのまま記録できます。</p>
+      </div>
+
+      <div class="feature">
+        <div>
+          <h3>利益と「売るべき価格」がすぐ分かる</h3>
+          <p>販売先と配送方法を選んで、仕入れ値と販売価格を入れるだけ。</p>
+          <ul>
+            <li>手数料・送料・梱包材を引いた利益と利益率</li>
+            <li>目標利益率から、必要な販売価格を逆算</li>
+            <li>手数料・送料は自由に編集でき、料金改定にも対応</li>
+          </ul>
+        </div>
+        <div class="shot"><img src="img/screen-calc.webp" alt="利益計算画面" loading="lazy" width="390" height="780"></div>
+      </div>
+
+      <div class="feature">
+        <div>
+          <h3>在庫と売上を、そのまま記録</h3>
+          <p>計算した商品は「在庫として保存」「売れた！で保存」のワンタップで記録されます。</p>
+          <ul>
+            <li>在庫・出品中・売却済をひと目で管理</li>
+            <li>商品名で検索、タップで編集</li>
+            <li>商品ごとの利益が一覧で分かる</li>
+          </ul>
+        </div>
+        <div class="shot"><img src="img/screen-items.webp" alt="在庫一覧画面" loading="lazy" width="390" height="780"></div>
+      </div>
+
+      <div class="feature">
+        <div>
+          <h3>月別の成績と、売れ残りが見える</h3>
+          <p>年間の売上・利益・在庫金額と、月ごとの利益をグラフで表示します。</p>
+          <ul>
+            <li>販売先別の利益比較<span class="pro-pill">PRO</span></li>
+            <li>仕入れから60日を過ぎた在庫をお知らせ<span class="pro-pill">PRO</span></li>
+            <li>確定申告用のCSVをExcel形式で出力<span class="pro-pill">PRO</span></li>
+          </ul>
+        </div>
+        <div class="shot"><img src="img/screen-stats.webp" alt="集計画面。月別利益のグラフと販売先別の利益" loading="lazy" width="390" height="780"></div>
+      </div>
+    </div>
   </section>
 
-  <section style="text-align:center;border:0">
-    <a class="cta alt" href="./">無料で使ってみる</a>
+  <section class="block">
+    <div class="wrap">
+      <div class="center">
+        <p class="kicker">COMPARE</p>
+        <h2>ほかの方法との違い</h2>
+        <p class="section-lead">「計算だけ」でも「自作の表」でもない、ちょうどいい道具です。</p>
+      </div>
+      <div class="table-scroll">
+        <table class="compare">
+          <thead><tr><th></th><th class="us">フリマ帳</th><th>利益計算アプリ</th><th>表計算ソフト</th></tr></thead>
+          <tbody>
+            <tr><td>手数料・送料込みの利益計算</td><td class="us y">○</td><td class="y">○</td><td>自分で数式を作る</td></tr>
+            <tr><td>売るべき価格の逆算</td><td class="us y">○</td><td class="n">—</td><td>自分で数式を作る</td></tr>
+            <tr><td>在庫・売上の記録</td><td class="us y">○</td><td class="n">—</td><td class="y">○</td></tr>
+            <tr><td>スマホで片手入力</td><td class="us y">○</td><td class="y">○</td><td class="n">やりにくい</td></tr>
+            <tr><td>月別グラフ・売れ残りの把握</td><td class="us y">○</td><td class="n">—</td><td>自分で作る</td></tr>
+            <tr><td>確定申告用CSV</td><td class="us y">○</td><td class="n">—</td><td>自分で整える</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt">
+    <div class="wrap">
+      <div class="center">
+        <p class="kicker">HOW TO START</p>
+        <h2>はじめ方は3ステップ</h2>
+        <p class="section-lead">アカウント登録もアプリストアも不要です。</p>
+      </div>
+      <ol class="steps">
+        <li><b>ページを開く</b><span>スマホのブラウザで開くだけ。すぐに計算できます。</span></li>
+        <li><b>ホーム画面に追加</b><span>共有メニューから追加すると、アプリのように起動できます。</span></li>
+        <li><b>売れたら記録</b><span>「売れた！で保存」を押すだけで、帳簿が自動でできあがります。</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="pricing">
+    <div class="wrap">
+      <div class="center">
+        <p class="kicker">PRICING</p>
+        <h2>料金</h2>
+        <p class="section-lead">まずは無料で。たくさん売るようになったらPROへ。<br>PROは月額なしの買い切りです。</p>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <h3>無料</h3>
+          <div class="amount">¥0</div>
+          <p class="note">ずっと無料</p>
+          <ul>
+            <li>利益計算・価格の逆算</li>
+            <li>商品登録 30件まで</li>
+            <li>売上・利益・月別グラフ</li>
+            <li>バックアップと復元</li>
+          </ul>
+          <a class="btn btn-ghost" href="./">無料で使ってみる</a>
+        </div>
+        <div class="plan pro">
+          <span class="tag">おすすめ</span>
+          <h3>PRO</h3>
+          <div class="amount">¥2,980<small>買い切り</small></div>
+          <p class="note">一度のお支払いで、ずっと使えます（税込）</p>
+          <ul>
+            <li>商品登録 無制限</li>
+            <li>確定申告用CSVエクスポート</li>
+            <li>販売先別の利益分析</li>
+            <li>売れ残り在庫のお知らせ</li>
+            <li>広告なし</li>
+          </ul>
+          <a class="btn btn-primary" href="./#pro">アプリからPROを購入</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="faq">
+    <div class="wrap">
+      <div class="center"><p class="kicker">FAQ</p><h2>よくある質問</h2></div>
+      <div class="faq">
+        <details><summary>アプリのインストールは必要ですか？</summary><p>不要です。ブラウザで開くだけで使えます。「ホーム画面に追加」をすると、アプリのように起動でき、電波がない場所でも動きます。</p></details>
+        <details><summary>データはどこに保存されますか？</summary><p>お使いの端末のブラウザ内にだけ保存され、運営者のサーバーには送信されません。機種変更の前には、設定画面の「バックアップ」で保存してください。</p></details>
+        <details><summary>手数料や送料が変わったら？</summary><p>設定画面で、販売先ごとの手数料と配送方法ごとの送料を自由に変更できます。</p></details>
+        <details><summary>PROは複数の端末で使えますか？</summary><p>はい。購入後にお送りする有効化リンクを、それぞれの端末で開いてください。</p></details>
+        <details><summary>このCSVだけで確定申告できますか？</summary><p>売上や経費を集計する材料としてお使いいただけます。申告が必要かどうかや具体的な処理は、税務署や税理士にご確認ください。</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="final">
+        <h2>次の出品から、利益を見える化しよう。</h2>
+        <p>登録不要・30件まで無料。いますぐ使えます。</p>
+        <a class="btn" href="./">無料で使ってみる →</a>
+      </div>
+    </div>
   </section>
 </main>
 
-<footer class="wrap">
-  <a href="privacy.html">プライバシーポリシー</a> ・ <a href="tokushoho.html">特定商取引法に基づく表記</a>
+<footer>
+  <div class="wrap">
+    <span>© フリマ帳</span>
+    <span><a href="privacy.html">プライバシーポリシー</a> ・ <a href="tokushoho.html">特定商取引法に基づく表記</a></span>
+  </div>
 </footer>
+
+<div class="sticky">
+  <span>登録不要・30件まで無料</span>
+  <a class="btn btn-primary" href="./">無料で使う</a>
+</div>
 </body>
 </html>

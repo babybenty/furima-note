@@ -67,16 +67,7 @@ function suggestPrice({ cost, extra, platform, shipping, target }) {
 }
 
 // ---------- license ----------
-// FRM-AAAA-BBBB-CCCC : CCCC は AAAABBBB+salt のハッシュ先頭4桁
-async function checksum(body) {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(body + CFG.licenseSalt));
-  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("").slice(0, 4).toUpperCase();
-}
-async function isValidLicense(key) {
-  const m = /^FRM-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})$/.exec((key || "").trim().toUpperCase());
-  if (!m) return false;
-  return (await checksum(m[1] + m[2])) === m[3];
-}
+const isValidLicense = async (key) => !!(await FurimaLicense.verify(key, CFG.licensePublicKey));
 let isPro = false;
 
 // ---------- UI: tabs ----------
@@ -262,8 +253,11 @@ function presetEditor(el, list, key, suffix) {
 function renderSettings() {
   presetEditor($("#platformEditor"), state.platforms, "fee", "%");
   presetEditor($("#shippingEditor"), state.shipping, "cost", "円");
-  $("#buyMonthly").href = CFG.buyMonthlyUrl;
-  $("#buyLifetime").href = CFG.buyLifetimeUrl;
+  $("#buyMonthly").hidden = !CFG.buyMonthlyUrl;
+  $("#buyMonthly").href = CFG.buyMonthlyUrl || "#";
+  const buy = $("#buyLifetime");
+  if (CFG.buyLifetimeUrl) buy.href = CFG.buyLifetimeUrl;
+  else { buy.removeAttribute("href"); buy.textContent = "PROは近日販売開始"; buy.classList.add("disabled"); }
   $("#licenseInput").value = state.license;
   $("#licenseMsg").textContent = isPro ? "PRO有効です。ありがとうございます！" : "";
 }
@@ -274,13 +268,16 @@ $("#resetPresets").addEventListener("click", () => {
   save(); render();
 });
 $("#activate").addEventListener("click", async () => {
-  const key = $("#licenseInput").value.trim().toUpperCase();
+  await activate($("#licenseInput").value.trim());
+});
+async function activate(key) {
   if (await isValidLicense(key)) {
     state.license = key; save(); await refreshPlan(); toast("PROを有効化しました");
-  } else {
-    $("#licenseMsg").textContent = "ライセンスキーが正しくありません。";
+    return true;
   }
-});
+  $("#licenseMsg").textContent = "ライセンスキーが正しくありません。";
+  return false;
+}
 $("#backup").addEventListener("click", () => download(`furima-backup-${today()}.json`, JSON.stringify(state, null, 2), "application/json"));
 $("#restore").addEventListener("change", async (e) => {
   const file = e.target.files[0];
@@ -323,7 +320,23 @@ async function refreshPlan() {
   render();
 }
 
-refreshPlan();
+// 購入メールの有効化リンク (…/#license=FRM2.xxx) から開いたら自動で有効化する
+async function activateFromHash() {
+  if (location.hash === "#pro") {
+    history.replaceState(null, "", location.pathname);
+    $('.tabs button[data-tab="settings"]').click();
+    return false;
+  }
+  const m = /[#&]license=([^&]+)/.exec(location.hash);
+  if (!m) return false;
+  history.replaceState(null, "", location.pathname);
+  $('.tabs button[data-tab="settings"]').click();
+  return activate(decodeURIComponent(m[1]));
+}
+window.addEventListener("hashchange", activateFromHash);
+(async () => {
+  if (!(await activateFromHash())) await refreshPlan();
+})();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }

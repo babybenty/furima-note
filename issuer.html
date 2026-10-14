@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>ライセンス発行 | フリマ帳</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="page.css">
+<style>
+  .box{margin-bottom:16px}
+  label{display:block;font-size:13px;color:var(--sub);margin:10px 0 4px}
+  input,textarea{width:100%;padding:10px;font-size:15px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font-family:inherit}
+  textarea{min-height:180px;font-size:13px}
+  .mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;word-break:break-all;background:var(--bg);padding:10px;border-radius:8px}
+  button{padding:10px 16px;font-size:14px;font-weight:700;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);cursor:pointer;margin:8px 8px 0 0}
+  button.sub{background:transparent;color:var(--accent)}
+  .warn{border-color:var(--pro)}
+  .ok{color:var(--accent);font-weight:700}
+  ol{padding-left:20px}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section>
+    <h2>ライセンス発行（運営者専用）</h2>
+    <p class="hint" style="color:var(--sub)">このページの秘密鍵は、いま開いているブラウザの中にだけ保存されます。サーバーには送られません。</p>
+
+    <div class="box" id="setup" hidden>
+      <h3>はじめに：署名用の鍵を作る（最初の1回だけ）</h3>
+      <button id="gen">鍵を作成する</button>
+      <button id="restoreBtn" class="sub">バックアップから復元</button>
+      <input id="restoreFile" type="file" accept="application/json" hidden>
+    </div>
+
+    <div class="box warn" id="keyInfo" hidden>
+      <h3>公開鍵（Claudeに渡すのはこちら）</h3>
+      <div class="mono" id="pubKey"></div>
+      <button id="copyPub" class="sub">公開鍵をコピー</button>
+      <button id="backup" class="sub">秘密鍵のバックアップを保存</button>
+      <p class="hint" style="color:var(--sub)">バックアップファイルは秘密鍵です。<b>誰にも渡さず</b>、USBメモリやパスワード管理アプリなど安全な場所に保管してください。なくすと、ブラウザのデータを消したときに発行ができなくなります。</p>
+      <p id="pubStatus"></p>
+    </div>
+
+    <div class="box" id="issue" hidden>
+      <h3>購入者にライセンスを発行</h3>
+      <label>購入者のメールアドレス（Stripeの通知メールに書かれています）</label>
+      <input id="email" type="email" placeholder="buyer@example.com">
+      <button id="make">発行する</button>
+      <div id="result" hidden>
+        <label>送信するメール（そのまま使えます）</label>
+        <textarea id="mailBody"></textarea>
+        <button id="copyMail">本文をコピー</button>
+        <a id="mailto" class="cta alt" style="padding:10px 16px;font-size:14px">メールアプリで開く</a>
+      </div>
+    </div>
+
+    <div class="box" id="logBox" hidden>
+      <h3>発行履歴（このブラウザ）</h3>
+      <ol id="log"></ol>
+    </div>
+  </section>
+</main>
+<script src="config.js"></script>
+<script src="license.js"></script>
+<script>
+"use strict";
+const KEY = "furima-issuer:v1";
+const $ = (s) => document.querySelector(s);
+const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (_) { return {}; } };
+const store = (d) => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) { alert("ブラウザに保存できませんでした。シークレットウィンドウでは使えません。"); } };
+let data = load();
+const appUrl = new URL("./", location.href).href;
+
+async function render() {
+  const has = !!data.privateJwk;
+  $("#setup").hidden = has;
+  $("#keyInfo").hidden = $("#issue").hidden = !has;
+  if (!has) return;
+  const pub = await FurimaLicense.publicFromPrivate(data.privateJwk);
+  $("#pubKey").textContent = pub;
+  $("#pubStatus").innerHTML = window.FURIMA_CONFIG.licensePublicKey === pub
+    ? '<span class="ok">✓ アプリにこの公開鍵が設定済みです。発行したキーはそのまま使えます。</span>'
+    : '<span style="color:var(--pro);font-weight:700">⚠ アプリにはまだこの公開鍵が設定されていません。上の公開鍵をClaudeに渡してください。</span>';
+  const log = data.log || [];
+  $("#logBox").hidden = !log.length;
+  $("#log").innerHTML = log.slice().reverse().map((l) => `<li>${l.d} — ${l.e.replace(/[<>&]/g, "")}</li>`).join("");
+}
+
+function download(name, text) {
+  const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([text], { type: "application/json" })), download: name });
+  a.click();
+}
+
+$("#gen").onclick = async () => {
+  const kp = await FurimaLicense.generateKeyPair();
+  data = { privateJwk: kp.privateJwk, log: [] };
+  store(data);
+  download("furima-private-key-backup.json", JSON.stringify(data.privateJwk));
+  render();
+};
+$("#restoreBtn").onclick = () => $("#restoreFile").click();
+$("#restoreFile").onchange = async (e) => {
+  try {
+    const jwk = JSON.parse(await e.target.files[0].text());
+    await FurimaLicense.publicFromPrivate(jwk);
+    data = { privateJwk: jwk, log: [] };
+    store(data); render();
+  } catch (_) { alert("バックアップファイルを読み込めませんでした。"); }
+};
+$("#backup").onclick = () => download("furima-private-key-backup.json", JSON.stringify(data.privateJwk));
+$("#copyPub").onclick = () => navigator.clipboard.writeText($("#pubKey").textContent).then(() => alert("コピーしました"));
+
+$("#make").onclick = async () => {
+  const email = $("#email").value.trim();
+  if (!/^[^@\s]+@[^@\s]+$/.test(email)) return alert("メールアドレスを確認してください。");
+  const issued = new Date().toISOString().slice(0, 10);
+  const key = await FurimaLicense.sign({ v: 2, plan: "pro", e: email, d: issued }, data.privateJwk);
+  const link = appUrl + "#license=" + encodeURIComponent(key);
+  const body = `このたびは「フリマ帳 PRO」をご購入いただき、ありがとうございます。
+
+■ かんたん有効化（おすすめ）
+フリマ帳を使っている端末で、下のリンクを開いてください。自動でPROが有効になります。
+${link}
+
+■ 手動で有効化する場合
+アプリの「設定」→「ライセンスキー」に、下のキーを貼り付けて「PROを有効化」を押してください。
+${key}
+
+※このキーはご購入者さま専用です。複数の端末でお使いいただけます。
+※データは端末内に保存されます。機種変更の際は「設定」→「バックアップ」をご利用ください。
+
+ご不明な点があれば、このメールにご返信ください。
+
+フリマ帳`;
+  $("#mailBody").value = body;
+  $("#mailto").href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent("【フリマ帳】PROのライセンスキーをお送りします")}&body=${encodeURIComponent(body)}`;
+  $("#result").hidden = false;
+  (data.log ||= []).push({ d: issued, e: email });
+  store(data); render();
+};
+$("#copyMail").onclick = () => navigator.clipboard.writeText($("#mailBody").value).then(() => alert("コピーしました"));
+
+render();
+</script>
+</body>
+</html>

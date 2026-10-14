@@ -1,9 +1,9 @@
 // 販売設定。公開前にここを書き換える。
 window.FURIMA_CONFIG = {
-  // Stripe Payment Links / Lemon Squeezy などの購入URL
-  buyMonthlyUrl: "https://buy.stripe.com/REPLACE_MONTHLY",
-  buyLifetimeUrl: "https://buy.stripe.com/REPLACE_LIFETIME",
-  // ライセンスキー検証用のソルト。tools/keygen.js と同じ値にする。
-  licenseSalt: "change-me-before-launch",
+  // Stripe Payment Link の URL。空にするとボタンを隠す。
+  buyLifetimeUrl: "",
+  buyMonthlyUrl: "",
+  // issuer.html で作った公開鍵（公開しても安全）。秘密鍵は絶対にここへ書かない。
+  licensePublicKey: "",
   freeItemLimit: 30,
 };
