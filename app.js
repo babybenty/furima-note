@@ -6,7 +6,7 @@ const STORE_KEY = "furima-note:v1";
 // 2026年10月時点の公開料金をもとにした初期値。改定時は設定画面から編集できる。
 const DEFAULT_PLATFORMS = [
   { id: "mercari", name: "メルカリ", fee: 10 },
-  { id: "rakuma", name: "楽天ラクマ", fee: 10 },
+  { id: "rakuma", name: "楽天ラクマ(最大10%)", fee: 10 },
   { id: "yahoo", name: "Yahoo!フリマ", fee: 5 },
   { id: "yauc", name: "ヤフオク!", fee: 10 },
   { id: "jimoty", name: "ジモティー/手渡し", fee: 0 },

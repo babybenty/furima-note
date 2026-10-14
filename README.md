@@ -31,6 +31,11 @@
 
 ## 公開手順
 
+**詳しいチェックリストは [LAUNCH.md](LAUNCH.md) にあります。**
+
+ファイル構成：`index.html`（アプリ本体） / `about.html`（紹介ページ） / `privacy.html`・`tokushoho.html`（法定ページ。【記入】欄を埋めてから公開） / `.github/workflows/pages.yml`（mainにpushするとGitHub Pagesへ自動公開）
+
+
 1. `config.js` の `buyMonthlyUrl` / `buyLifetimeUrl` を Stripe Payment Links などの購入URLにする
 2. `licenseSalt` を推測されにくい値に変える
 3. キーを発行する：`LICENSE_SALT=<同じ値> node tools/keygen.js 100`
