@@ -1,2 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /furima-note/issuer.html
+Disallow: /furima-note/thanks.html
+Sitemap: https://babybenty.github.io/furima-note/sitemap.xml
