@@ -1,0 +1,10 @@
+{
+  "name": "フリマ帳 - 利益計算と在庫管理",
+  "short_name": "フリマ帳",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5f7f7",
+  "theme_color": "#0f766e",
+  "lang": "ja",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

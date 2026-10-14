@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>フリマ帳</title>
+<meta name="description" content="メルカリ・ラクマ・Yahoo!フリマの利益計算と在庫管理をひとつに。確定申告用CSVも出せる個人セラー向けアプリ。">
+<meta name="theme-color" content="#0f766e">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <h1>フリマ帳</h1>
+  <span id="planBadge" class="badge">FREE</span>
+</header>
+
+<main>
+  <!-- 計算 -->
+  <section id="tab-calc" class="tab active">
+    <form id="calcForm" class="card" autocomplete="off">
+      <label>商品名<input name="name" placeholder="例: ナイキ スニーカー 27cm"></label>
+      <div class="row">
+        <label>販売先
+          <select name="platform" id="platformSel"></select>
+        </label>
+        <label>配送方法
+          <select name="shipping" id="shippingSel"></select>
+        </label>
+      </div>
+      <div class="row">
+        <label>仕入れ値 (円)<input name="cost" type="number" inputmode="numeric" min="0" value="0"></label>
+        <label>販売価格 (円)<input name="price" type="number" inputmode="numeric" min="0" value="0"></label>
+      </div>
+      <div class="row">
+        <label>梱包材など (円)<input name="extra" type="number" inputmode="numeric" min="0" value="0"></label>
+        <label>目標利益率 (%)<input name="target" type="number" inputmode="numeric" min="0" max="90" value="30"></label>
+      </div>
+      <div class="result" id="calcResult"></div>
+      <div class="row">
+        <button type="button" id="saveStock" class="secondary">在庫として保存</button>
+        <button type="button" id="saveSold">売れた！で保存</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- 在庫 -->
+  <section id="tab-items" class="tab">
+    <div class="toolbar">
+      <select id="filterStatus">
+        <option value="all">すべて</option>
+        <option value="stock">在庫</option>
+        <option value="listed">出品中</option>
+        <option value="sold">売却済</option>
+      </select>
+      <input id="search" type="search" placeholder="検索">
+    </div>
+    <p class="hint" id="limitHint"></p>
+    <ul id="itemList" class="list"></ul>
+  </section>
+
+  <!-- 集計 -->
+  <section id="tab-stats" class="tab">
+    <div class="card">
+      <label>対象年<select id="yearSel"></select></label>
+      <div class="kpis" id="kpis"></div>
+      <h3>月別利益</h3>
+      <div id="monthChart" class="bars"></div>
+      <h3>販売先別</h3>
+      <div id="platformStats"></div>
+      <h3>滞留在庫（60日以上）</h3>
+      <ul id="staleList" class="list compact"></ul>
+    </div>
+    <div class="card">
+      <h3>確定申告用エクスポート <span class="pro-tag">PRO</span></h3>
+      <p class="hint">売上・仕入・手数料・送料を年単位でCSV出力（Excel対応のBOM付き）。</p>
+      <button id="exportCsv">CSVをダウンロード</button>
+    </div>
+  </section>
+
+  <!-- 設定 -->
+  <section id="tab-settings" class="tab">
+    <div class="card" id="proCard">
+      <h3>フリマ帳 PRO</h3>
+      <ul class="perks">
+        <li>商品登録が無制限（無料版は30件まで）</li>
+        <li>確定申告用CSVエクスポート</li>
+        <li>滞留在庫アラート・販売先別分析</li>
+        <li>広告なし</li>
+      </ul>
+      <div class="row">
+        <a id="buyMonthly" class="btn" target="_blank" rel="noopener">月額 ¥380</a>
+        <a id="buyLifetime" class="btn secondary" target="_blank" rel="noopener">買い切り ¥2,980</a>
+      </div>
+      <label>ライセンスキー<input id="licenseInput" placeholder="FRM-XXXX-XXXX-XXXX"></label>
+      <button id="activate" class="secondary">PROを有効化</button>
+      <p class="hint" id="licenseMsg"></p>
+    </div>
+    <div class="card">
+      <h3>手数料・送料の設定</h3>
+      <p class="hint">料金は各サービスで改定されることがあります。最新の公式料金に合わせて編集してください。</p>
+      <h4>販売先（手数料%）</h4>
+      <div id="platformEditor"></div>
+      <h4>配送方法（円）</h4>
+      <div id="shippingEditor"></div>
+      <button id="resetPresets" class="secondary">初期値に戻す</button>
+    </div>
+    <div class="card">
+      <h3>データ</h3>
+      <div class="row">
+        <button id="backup" class="secondary">バックアップ(JSON)</button>
+        <label class="btn secondary filebtn">復元<input id="restore" type="file" accept="application/json" hidden></label>
+      </div>
+      <p class="hint">データはこの端末のブラウザ内にのみ保存されます。</p>
+    </div>
+  </section>
+
+  <aside id="adSlot" class="ad">広告スペース（PROで非表示）</aside>
+</main>
+
+<nav class="tabs">
+  <button data-tab="calc" class="active">計算</button>
+  <button data-tab="items">在庫</button>
+  <button data-tab="stats">集計</button>
+  <button data-tab="settings">設定</button>
+</nav>
+
+<dialog id="editDlg">
+  <form method="dialog" id="editForm">
+    <h3>商品の編集</h3>
+    <label>商品名<input name="name"></label>
+    <div class="row">
+      <label>状態<select name="status">
+        <option value="stock">在庫</option><option value="listed">出品中</option><option value="sold">売却済</option>
+      </select></label>
+      <label>販売先<select name="platform"></select></label>
+    </div>
+    <div class="row">
+      <label>仕入れ値<input name="cost" type="number" min="0"></label>
+      <label>販売価格<input name="price" type="number" min="0"></label>
+    </div>
+    <div class="row">
+      <label>配送方法<select name="shipping"></select></label>
+      <label>梱包材など<input name="extra" type="number" min="0"></label>
+    </div>
+    <div class="row">
+      <label>仕入日<input name="boughtAt" type="date"></label>
+      <label>売却日<input name="soldAt" type="date"></label>
+    </div>
+    <div class="row">
+      <button value="delete" class="danger">削除</button>
+      <button value="cancel" class="secondary">キャンセル</button>
+      <button value="save">保存</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
