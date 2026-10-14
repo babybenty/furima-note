@@ -47,7 +47,7 @@ jobs:
         run: |
           set -o pipefail
           ./gradlew --no-daemon bundleRelease 2>&1 | tee "$RUNNER_TEMP/gradle.log" || {
-            grep -A25 "What went wrong" "$RUNNER_TEMP/gradle.log" | head -40 | while IFS= read -r l; do echo "::error::$l"; done
+            grep -B6 -A12 "What went wrong" "$RUNNER_TEMP/gradle.log" | head -40 | while IFS= read -r l; do echo "::error::$l"; done
             exit 1
           }
       - uses: actions/upload-artifact@v4
@@ -64,7 +64,7 @@ jobs:
           set -o pipefail
           ./gradlew --no-daemon assembleDebug 2>&1 | tee "$RUNNER_TEMP/gradle.log" || {
             # 失敗理由を注釈に出す（ログを開かなくても原因が分かるように）
-            grep -A25 "What went wrong" "$RUNNER_TEMP/gradle.log" | head -40 | while IFS= read -r l; do echo "::error::$l"; done
+            grep -B6 -A12 "What went wrong" "$RUNNER_TEMP/gradle.log" | head -40 | while IFS= read -r l; do echo "::error::$l"; done
             exit 1
           }
       - uses: actions/upload-artifact@v4

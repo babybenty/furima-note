@@ -8,8 +8,9 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         // CI では実行番号を versionCode にして、アップロードのたびに自動で増やす
-        versionCode (System.getenv("VERSION_CODE") ?: "1").toInteger()
-        versionName "1.0." + (System.getenv("VERSION_CODE") ?: "1")
+        def buildNumber = System.getenv("VERSION_CODE") ?: "1"
+        versionCode Integer.parseInt(buildNumber)
+        versionName "1.0." + buildNumber
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
