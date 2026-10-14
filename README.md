@@ -43,6 +43,9 @@
 | `privacy.html` / `tokushoho.html` | 法定ページ |
 | `config.js` | 購入URLと公開鍵 |
 | `.github/workflows/pages.yml` | mainにpushするとGitHub Pagesへ自動公開 |
+| `android/` / `capacitor.config.json` / `scripts/build-www.mjs` | Google Play 版（Capacitor）。Web版と同じコードを同梱し、Stripeへの導線を外して作る |
+| `.github/workflows/android.yml` | Google Play 提出用の署名済み AAB（鍵がなければ確認用 APK）を作る |
+| `store/` / `STORE.md` | ストア用の画像と、Google Play 公開手順 |
 
 ## 注意点と今後の改善
 
