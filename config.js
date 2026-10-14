@@ -4,6 +4,6 @@ window.FURIMA_CONFIG = {
   buyLifetimeUrl: "",
   buyMonthlyUrl: "",
   // issuer.html で作った公開鍵（公開しても安全）。秘密鍵は絶対にここへ書かない。
-  licensePublicKey: "",
+  licensePublicKey: "BJQYx7gcgKRNLL1qxXdZP733Q6BAyovy3u9gwpLP-x_VOKCEWJ_VkqZaCBEHpJ-IED4L1H2iIUcrxY9KJRnK-sI",
   freeItemLimit: 30,
 };
