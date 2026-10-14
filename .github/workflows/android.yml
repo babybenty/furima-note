@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ["android/**", "index.html", "app.js", "styles.css", "config.js", "license.js", "scripts/**", "package*.json", "capacitor.config.json"]
+    paths: [".github/workflows/android.yml", "android/**", "index.html", "app.js", "styles.css", "config.js", "license.js", "scripts/**", "package*.json", "capacitor.config.json"]
 permissions:
   contents: read
 jobs:
