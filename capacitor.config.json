@@ -1,0 +1,8 @@
+{
+  "appId": "io.github.babybenty.furimacho",
+  "appName": "フリマ帳",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#f5f7f7"
+  }
+}

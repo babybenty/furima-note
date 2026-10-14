@@ -1,2 +1,4 @@
 /*.png
 /*.csv
+node_modules/
+www/

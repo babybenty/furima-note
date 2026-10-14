@@ -1,6 +1,8 @@
 "use strict";
 
 const CFG = window.FURIMA_CONFIG;
+// Google Play 版（Capacitor）。外部決済への導線を出さず、ファイル保存は共有メニューを使う
+const IS_ANDROID = CFG.platform === "android";
 const STORE_KEY = "furima-note:v1";
 
 // 2026年10月時点の公開料金をもとにした初期値。改定時は設定画面から編集できる。
@@ -106,7 +108,9 @@ calcForm.addEventListener("input", renderCalc);
 
 function canAdd() {
   if (isPro || state.items.length < CFG.freeItemLimit) return true;
-  alert(`無料版は${CFG.freeItemLimit}件まで登録できます。PROで無制限になります。`);
+  alert(IS_ANDROID
+    ? `無料版は${CFG.freeItemLimit}件まで登録できます。PRO（無制限）はアプリ内購入に対応する準備中です。`
+    : `無料版は${CFG.freeItemLimit}件まで登録できます。PROで無制限になります。`);
   $('.tabs button[data-tab="settings"]').click();
   return false;
 }
@@ -255,6 +259,8 @@ function renderSettings() {
   presetEditor($("#shippingEditor"), state.shipping, "cost", "円");
   $("#buyMonthly").hidden = !CFG.buyMonthlyUrl;
   $("#buyMonthly").href = CFG.buyMonthlyUrl || "#";
+  $("#proBuy").hidden = IS_ANDROID;
+  $("#proSoon").hidden = !IS_ANDROID;
   const buy = $("#buyLifetime");
   if (CFG.buyLifetimeUrl) buy.href = CFG.buyLifetimeUrl;
   else { buy.removeAttribute("href"); buy.textContent = "PROは近日販売開始"; buy.classList.add("disabled"); }
@@ -293,7 +299,17 @@ $("#restore").addEventListener("change", async (e) => {
 });
 
 // ---------- misc ----------
-function download(name, text, type) {
+async function download(name, text, type) {
+  if (IS_ANDROID) {
+    const { Filesystem, Share } = window.Capacitor.Plugins;
+    try {
+      const { uri } = await Filesystem.writeFile({ path: name, data: text, directory: "CACHE", encoding: "utf8" });
+      await Share.share({ title: name, files: [uri] });
+    } catch (e) {
+      if (!/cancel/i.test(String(e && e.message))) alert("ファイルを保存できませんでした。");
+    }
+    return;
+  }
   const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([text], { type })), download: name });
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
@@ -306,7 +322,7 @@ function toast(msg) {
 
 function renderPromo() {
   const onSettings = $("#tab-settings").classList.contains("active");
-  $("#adSlot").hidden = isPro || onSettings;
+  $("#adSlot").hidden = isPro || onSettings || IS_ANDROID;
   const left = CFG.freeItemLimit - state.items.length;
   $("#promoText").textContent = left <= 10
     ? `無料版はあと${Math.max(0, left)}件まで。PROなら登録無制限です`
@@ -347,6 +363,6 @@ window.addEventListener("hashchange", activateFromHash);
 (async () => {
   if (!(await activateFromHash())) await refreshPlan();
 })();
-if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+if (!IS_ANDROID && "serviceWorker" in navigator && location.protocol.startsWith("http")) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
