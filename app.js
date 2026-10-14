@@ -304,6 +304,16 @@ function toast(msg) {
   setTimeout(() => t.remove(), 2000);
 }
 
+function renderPromo() {
+  const onSettings = $("#tab-settings").classList.contains("active");
+  $("#adSlot").hidden = isPro || onSettings;
+  const left = CFG.freeItemLimit - state.items.length;
+  $("#promoText").textContent = left <= 10
+    ? `無料版はあと${Math.max(0, left)}件まで。PROなら登録無制限です`
+    : "登録無制限・確定申告CSV・売れ残りのお知らせ";
+}
+$("#promoBtn").addEventListener("click", () => $('.tabs button[data-tab="settings"]').click());
+
 function render() {
   fillSelect($("#platformSel"), state.platforms);
   fillSelect($("#shippingSel"), state.shipping);
@@ -311,12 +321,12 @@ function render() {
   renderItems();
   renderStats();
   renderSettings();
+  renderPromo();
 }
 async function refreshPlan() {
   isPro = await isValidLicense(state.license);
   $("#planBadge").textContent = isPro ? "PRO" : "FREE";
   $("#planBadge").classList.toggle("pro", isPro);
-  $("#adSlot").hidden = isPro;
   render();
 }
 
