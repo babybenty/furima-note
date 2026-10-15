@@ -202,6 +202,11 @@
         <details><summary>手数料や送料が変わったら？</summary><p>設定画面で、販売先ごとの手数料と配送方法ごとの送料を自由に変更できます。</p></details>
         <details><summary>PROは複数の端末で使えますか？</summary><p>はい。購入後にお送りする有効化リンクを、それぞれの端末で開いてください。</p></details>
         <details><summary>このCSVだけで確定申告できますか？</summary><p>売上や経費を集計する材料としてお使いいただけます。申告が必要かどうかや具体的な処理は、税務署や税理士にご確認ください。</p></details>
+        <div id="affBox" class="aff-box" hidden>
+          <p class="aff-title">確定申告におすすめの会計ソフト <span class="pr">PR</span></p>
+          <ul id="affList"></ul>
+          <p class="aff-note">※ 広告リンクを含みます。各サービスの料金・機能は公式サイトでご確認ください。</p>
+        </div>
       </div>
     </div>
   </section>
@@ -228,5 +233,18 @@
   <span>登録不要・30件まで無料</span>
   <a class="btn btn-primary" href="./">無料で使う</a>
 </div>
+<script src="config.js"></script>
+<script>
+(function () {
+  var list = ((window.FURIMA_CONFIG || {}).affiliates || []).filter(function (a) { return a.url; });
+  if (!list.length) return;
+  var esc = function (t) { return String(t).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  document.getElementById("affList").innerHTML = list.map(function (a) {
+    return '<li><a href="' + esc(a.url) + '" target="_blank" rel="nofollow sponsored noopener"><b>' + esc(a.name) + '</b><span>' + esc(a.note || "") + '</span></a>' +
+      (a.pixel ? '<img src="' + esc(a.pixel) + '" width="1" height="1" alt="" style="border:0">' : "") + '</li>';
+  }).join("");
+  document.getElementById("affBox").hidden = false;
+})();
+</script>
 </body>
 </html>

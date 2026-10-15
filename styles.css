@@ -53,3 +53,7 @@ h3{margin:14px 0 8px;font-size:15px}h3:first-child{margin-top:0}h4{font-size:13p
 .btn.disabled{opacity:.5;pointer-events:none}
 input,select,button,textarea{font-family:inherit}
 .promo[hidden]{display:none}
+.pr-tag{font-size:10px;border:1px solid var(--sub);color:var(--sub);padding:0 5px;border-radius:4px;vertical-align:middle}
+.aff{list-style:none;margin:0;padding:0}.aff li{margin-bottom:8px}
+.aff a{display:flex;flex-direction:column;padding:12px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--fg);background:var(--bg)}
+.aff a span{font-size:12px;color:var(--sub)}

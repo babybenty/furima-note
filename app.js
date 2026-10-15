@@ -320,6 +320,15 @@ function toast(msg) {
   setTimeout(() => t.remove(), 2000);
 }
 
+// 会計ソフトの紹介（URLが設定されたものだけ）
+function renderAffiliates() {
+  const list = (CFG.affiliates || []).filter((a) => a.url);
+  $("#affCard").hidden = !list.length;
+  $("#affList").innerHTML = list.map((a) =>
+    `<li><a href="${esc(a.url)}" target="_blank" rel="nofollow sponsored noopener"><b>${esc(a.name)}</b><span>${esc(a.note || "")}</span></a>` +
+    (a.pixel ? `<img src="${esc(a.pixel)}" width="1" height="1" alt="" style="border:0">` : "") + `</li>`).join("");
+}
+
 function renderPromo() {
   const onSettings = $("#tab-settings").classList.contains("active");
   $("#adSlot").hidden = isPro || onSettings || IS_ANDROID;
@@ -338,6 +347,7 @@ function render() {
   renderStats();
   renderSettings();
   renderPromo();
+  renderAffiliates();
 }
 async function refreshPlan() {
   isPro = await isValidLicense(state.license);
