@@ -234,13 +234,16 @@ ef.status.addEventListener("change", () => {
   if (ef.status.value !== "sold") ef.soldAt.value = "";
 });
 ef.soldAt.addEventListener("change", () => { if (ef.soldAt.value) ef.status.value = "sold"; });
-$("#photoBox").onclick = () => $("#photoInput").click();
-$("#photoInput").onchange = async (e) => {
+$("#photoCamera").onclick = () => $("#photoCameraInput").click();
+$("#photoAlbum").onclick = () => $("#photoInput").click();
+async function onPhotoPicked(e) {
   const file = e.target.files[0]; e.target.value = "";
   if (!file) return;
   try { photoDraft = await DB.compressImage(file); showPhoto(photoDraft); }
   catch (err) { toast(err.message); }
-};
+}
+$("#photoInput").onchange = onPhotoPicked;
+$("#photoCameraInput").onchange = onPhotoPicked;
 $("#photoRemove").onclick = () => { photoDraft = null; showPhoto(null); };
 
 dlg.addEventListener("close", async () => {

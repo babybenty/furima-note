@@ -201,10 +201,16 @@
     <div class="preview" id="editPreview"></div>
     <div class="photo" id="photoBox">
       <img id="photoImg" alt="" hidden>
-      <span id="photoEmpty">写真を追加</span>
-      <input type="file" id="photoInput" accept="image/*" hidden>
+      <span id="photoEmpty">写真はまだありません</span>
     </div>
-    <button type="button" class="link small" id="photoRemove" hidden>写真を外す</button>
+    <div class="photo-actions">
+      <button type="button" class="secondary small" id="photoCamera">📷 カメラで撮る</button>
+      <button type="button" class="secondary small" id="photoAlbum">🖼 アルバムから選ぶ</button>
+      <button type="button" class="link small" id="photoRemove" hidden>写真を外す</button>
+    </div>
+    <!-- カメラ用（capture 指定で直接カメラを起動）とアルバム用で入力を分ける -->
+    <input type="file" id="photoCameraInput" accept="image/*" capture="environment" hidden>
+    <input type="file" id="photoInput" accept="image/*" hidden>
     <label>商品名<input name="name" maxlength="80" required></label>
     <div class="row">
       <label>状態<select name="status">
