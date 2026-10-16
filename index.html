@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>フリマ帳</title>
-<meta name="description" content="メルカリ・ラクマ・Yahoo!フリマの利益計算と在庫管理をひとつに。確定申告用CSVも出せる個人セラー向けアプリ。">
+<meta name="description" content="メルカリ・ラクマ・Yahoo!フリマの利益計算と在庫管理をひとつに。販売先の比較、経費、確定申告の集計まで。">
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,133 +20,192 @@
 </header>
 
 <main>
-  <!-- 計算 -->
+  <!-- ===== 計算 ===== -->
   <section id="tab-calc" class="tab active">
+    <div class="card welcome" id="welcome" hidden>
+      <b>フリマ帳へようこそ</b>
+      <ol><li>仕入れ値と販売価格を入れると、手数料・送料を引いた<b>本当の利益</b>が出ます</li><li>下の「販売先くらべ」で、<b>どこで売るのが一番得か</b>が分かります</li><li>「保存」で在庫に記録。売れたら「売却済」にするだけで帳簿ができます</li></ol>
+      <button class="link" id="welcomeClose">とじる</button>
+    </div>
     <form id="calcForm" class="card" autocomplete="off">
-      <label>商品名<input name="name" placeholder="例: ナイキ スニーカー 27cm"></label>
+      <label>商品名<input name="name" placeholder="例: ナイキ スニーカー 27cm" maxlength="80"></label>
       <div class="row">
-        <label>販売先
-          <select name="platform" id="platformSel"></select>
-        </label>
-        <label>配送方法
-          <select name="shipping" id="shippingSel"></select>
-        </label>
+        <label>販売先<select name="platform" id="platformSel"></select></label>
+        <label>配送方法<select name="shipping" id="shippingSel"></select></label>
       </div>
       <div class="row">
-        <label>仕入れ値 (円)<input name="cost" type="number" inputmode="numeric" min="0" value="0"></label>
-        <label>販売価格 (円)<input name="price" type="number" inputmode="numeric" min="0" value="0"></label>
+        <label>仕入れ値 (円)<input name="cost" type="number" inputmode="numeric" min="0" placeholder="0"></label>
+        <label>販売価格 (円)<input name="price" type="number" inputmode="numeric" min="0" placeholder="0"></label>
       </div>
       <div class="row">
-        <label>梱包材など (円)<input name="extra" type="number" inputmode="numeric" min="0" value="0"></label>
+        <label>梱包材など (円)<input name="extra" type="number" inputmode="numeric" min="0" placeholder="0"></label>
         <label>目標利益率 (%)<input name="target" type="number" inputmode="numeric" min="0" max="90" value="30"></label>
       </div>
       <div class="result" id="calcResult"></div>
-      <div class="row">
-        <button type="button" id="saveStock" class="secondary">在庫として保存</button>
-        <button type="button" id="saveSold">売れた！で保存</button>
+      <div class="row3">
+        <button type="button" class="secondary" data-save="stock">在庫に保存</button>
+        <button type="button" class="secondary" data-save="listed">出品中で保存</button>
+        <button type="button" data-save="sold">売れた！</button>
       </div>
     </form>
+    <div class="card">
+      <h3>販売先くらべ <span class="hint-inline">同じ価格で売ったときの利益</span></h3>
+      <div id="compare" class="compare"></div>
+    </div>
   </section>
 
-  <!-- 在庫 -->
+  <!-- ===== 在庫 ===== -->
   <section id="tab-items" class="tab">
     <div class="toolbar">
-      <select id="filterStatus">
-        <option value="all">すべて</option>
-        <option value="stock">在庫</option>
-        <option value="listed">出品中</option>
-        <option value="sold">売却済</option>
-      </select>
-      <input id="search" type="search" placeholder="検索">
+      <input id="search" type="search" placeholder="商品名・メモ・仕入れ先で検索">
     </div>
-    <p class="hint" id="limitHint"></p>
+    <div class="chips" id="statusChips">
+      <button data-status="all" class="on">すべて</button><button data-status="stock">在庫</button><button data-status="listed">出品中</button><button data-status="sold">売却済</button>
+    </div>
+    <div class="toolbar">
+      <select id="filterPlatform"></select>
+      <select id="sortBy">
+        <option value="new">新しい順</option>
+        <option value="old">保有日数が長い順</option>
+        <option value="profit">利益が大きい順</option>
+        <option value="price">販売価格が高い順</option>
+        <option value="sold">売れた日が新しい順</option>
+      </select>
+    </div>
+    <p class="summary" id="itemSummary"></p>
     <ul id="itemList" class="list"></ul>
+    <button class="more secondary" id="moreItems" hidden>もっと見る</button>
+    <button class="fab" id="addItem" aria-label="商品を追加">＋</button>
   </section>
 
-  <!-- 集計 -->
+  <!-- ===== 経費 ===== -->
+  <section id="tab-expenses" class="tab">
+    <div id="expLock" class="card lockcard" hidden></div>
+    <div id="expBody">
+      <form id="expForm" class="card" autocomplete="off">
+        <h3>経費を記録</h3>
+        <div class="row">
+          <label>日付<input name="date" type="date" required></label>
+          <label>区分<select name="category" id="expCat"></select></label>
+        </div>
+        <div class="row">
+          <label>金額 (円)<input name="amount" type="number" inputmode="numeric" min="1" required placeholder="0"></label>
+          <label>メモ<input name="memo" maxlength="60" placeholder="例: 緩衝材 100枚"></label>
+        </div>
+        <button type="submit">追加する</button>
+        <p class="hint">商品ごとの送料・梱包材は商品側に入っているので、ここには入れません。まとめ買いした梱包資材や、仕入れの交通費などを記録します。</p>
+      </form>
+      <div class="card">
+        <div class="row between"><h3>経費の一覧</h3><select id="expYear" class="mini"></select></div>
+        <p class="summary" id="expSummary"></p>
+        <ul id="expList" class="list compact"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 集計 ===== -->
   <section id="tab-stats" class="tab">
     <div class="card">
-      <label>対象年<select id="yearSel"></select></label>
+      <div class="row between"><h3>年間の成績</h3><select id="yearSel" class="mini"></select></div>
       <div class="kpis" id="kpis"></div>
-      <h3>月別利益</h3>
-      <div id="monthChart" class="bars"></div>
-      <h3>販売先別</h3>
-      <div id="platformStats"></div>
-      <h3>滞留在庫（60日以上）</h3>
-      <ul id="staleList" class="list compact"></ul>
+      <h4>月別の売上と利益</h4>
+      <div id="monthChart" class="chart"></div>
+      <div class="legend"><span><i class="lg-sales"></i>売上</span><span><i class="lg-profit"></i>利益</span></div>
     </div>
     <div class="card">
-      <h3>確定申告用エクスポート <span class="pro-tag">PRO</span></h3>
-      <p class="hint">売上・仕入・手数料・送料を年単位でCSV出力（Excel対応のBOM付き）。</p>
-      <button id="exportCsv">CSVをダウンロード</button>
+      <h3>販売先別 <span class="pro-tag">PRO</span></h3>
+      <div id="platformStats"></div>
+    </div>
+    <div class="card">
+      <h3>売れ残り在庫（60日以上） <span class="pro-tag">PRO</span></h3>
+      <p class="hint">値下げしても赤字にならない最低価格（損益分岐）を表示します。</p>
+      <ul id="staleList" class="list compact"></ul>
+    </div>
+    <div class="card" id="taxCard">
+      <h3>確定申告の集計 <span class="pro-tag">PRO</span></h3>
+      <div id="taxBody"></div>
     </div>
     <div class="card" id="affCard" hidden>
       <h3>確定申告におすすめの会計ソフト <span class="pr-tag">PR</span></h3>
-      <p class="hint">フリマ帳のCSVの数字をもとに、会計ソフトで申告書を作れます。</p>
+      <p class="hint">フリマ帳の集計をもとに、会計ソフトで申告書を作れます。</p>
       <ul class="aff" id="affList"></ul>
       <p class="hint">※ 広告リンクを含みます。各サービスの料金・機能は公式サイトでご確認ください。</p>
     </div>
   </section>
 
-  <!-- 設定 -->
+  <!-- ===== 設定 ===== -->
   <section id="tab-settings" class="tab">
+    <div class="card warn" id="backupReminder" hidden></div>
     <div class="card" id="proCard">
-      <h3>フリマ帳 PRO</h3>
+      <h3>フリマ帳 PRO <span class="price-tag">買い切り ¥2,980</span></h3>
       <ul class="perks">
-        <li>商品登録が無制限（無料版は30件まで）</li>
-        <li>確定申告用CSVエクスポート</li>
-        <li>滞留在庫アラート・販売先別分析</li>
-        <li>広告なし</li>
+        <li>商品登録が無制限（無料版は<span id="limitNum">30</span>件まで）</li>
+        <li>経費の記録と、確定申告の集計（売上原価・経費・所得）</li>
+        <li>売上・経費・集計表のCSV出力と印刷</li>
+        <li>販売先別の分析・売れ残り在庫の損益分岐価格</li>
       </ul>
       <p class="hint" id="proSoon" hidden>PROは、Google Play のアプリ内購入に対応する準備を進めています。もうしばらくお待ちください。</p>
       <div id="proBuy">
-      <div class="row">
-        <a id="buyLifetime" class="btn" target="_blank" rel="noopener">買い切り ¥2,980 で購入</a>
-        <a id="buyMonthly" class="btn secondary" target="_blank" rel="noopener" hidden>月額プラン</a>
-      </div>
-      <label>ライセンスキー<input id="licenseInput" placeholder="購入メールのキーを貼り付け"></label>
-      <button id="activate" class="secondary">PROを有効化</button>
-      <p class="hint">購入後のメールにある「有効化リンク」を、このアプリを使う端末で開くと自動で有効になります。</p>
-      <p class="hint" id="licenseMsg"></p>
+        <div class="row">
+          <a id="buyLifetime" class="btn" target="_blank" rel="noopener">買い切り ¥2,980 で購入</a>
+          <a id="buyMonthly" class="btn secondary" target="_blank" rel="noopener" hidden>月額プラン</a>
+        </div>
+        <label>ライセンスキー<input id="licenseInput" placeholder="購入メールのキーを貼り付け"></label>
+        <button id="activate" class="secondary">PROを有効化</button>
+        <p class="hint">購入後のメールにある「有効化リンク」を、このアプリを使う端末で開くと自動で有効になります。</p>
+        <p class="hint" id="licenseMsg"></p>
       </div>
     </div>
     <div class="card">
-      <h3>手数料・送料の設定</h3>
+      <h3>販売先と手数料</h3>
       <p class="hint">料金は各サービスで改定されることがあります。最新の公式料金に合わせて編集してください。</p>
-      <h4>販売先（手数料%）</h4>
-      <div id="platformEditor"></div>
-      <h4>配送方法（円）</h4>
-      <div id="shippingEditor"></div>
-      <button id="resetPresets" class="secondary">初期値に戻す</button>
+      <div id="platformEditor" class="editor"></div>
+      <button class="secondary small" id="addPlatform">＋ 販売先を追加</button>
+    </div>
+    <div class="card">
+      <h3>配送方法と送料</h3>
+      <div id="shippingEditor" class="editor"></div>
+      <button class="secondary small" id="addShipping">＋ 配送方法を追加</button>
+      <button class="link" id="resetPresets">手数料と送料を初期値に戻す</button>
     </div>
     <div class="card">
       <h3>データ</h3>
+      <p class="hint" id="dataInfo"></p>
       <div class="row">
-        <button id="backup" class="secondary">バックアップ(JSON)</button>
-        <label class="btn secondary filebtn">復元<input id="restore" type="file" accept="application/json" hidden></label>
+        <button id="backup" class="secondary">バックアップを保存</button>
+        <label class="btn secondary filebtn">バックアップから復元<input id="restore" type="file" accept="application/json,.json" hidden></label>
       </div>
-      <p class="hint">データはこの端末のブラウザ内にのみ保存されます。</p>
+      <p class="hint">データ（写真を含む）はこの端末の中にだけ保存されます。機種変更の前や、月に1回はバックアップをおすすめします。</p>
     </div>
     <p class="links"><a href="https://babybenty.github.io/furima-note/about.html">フリマ帳について</a> ・ <a href="https://babybenty.github.io/furima-note/privacy.html">プライバシーポリシー</a> ・ <a href="https://babybenty.github.io/furima-note/tokushoho.html">特定商取引法に基づく表記</a></p>
+    <p class="links" id="version"></p>
   </section>
 
-  <aside id="adSlot" class="promo">
-    <div><b>フリマ帳 PRO</b> <span id="promoText">登録無制限・確定申告CSV・売れ残りのお知らせ</span></div>
+  <aside id="adSlot" class="promo" hidden>
+    <div><b>フリマ帳 PRO</b> <span id="promoText"></span></div>
     <button type="button" id="promoBtn">買い切り ¥2,980</button>
   </aside>
 </main>
 
 <nav class="tabs">
-  <button data-tab="calc" class="active">計算</button>
-  <button data-tab="items">在庫</button>
-  <button data-tab="stats">集計</button>
-  <button data-tab="settings">設定</button>
+  <button data-tab="calc" class="active"><span class="ic">¥</span>計算</button>
+  <button data-tab="items"><span class="ic">▤</span>在庫</button>
+  <button data-tab="expenses"><span class="ic">✎</span>経費</button>
+  <button data-tab="stats"><span class="ic">▥</span>集計</button>
+  <button data-tab="settings"><span class="ic">⚙</span>設定<i class="dot" id="settingsDot" hidden></i></button>
 </nav>
 
-<dialog id="editDlg">
-  <form method="dialog" id="editForm">
-    <h3>商品の編集</h3>
-    <label>商品名<input name="name"></label>
+<dialog id="editDlg" class="sheet">
+  <form method="dialog" id="editForm" autocomplete="off">
+    <div class="sheet-head"><h3 id="editTitle">商品の編集</h3><button value="cancel" class="link" formnovalidate>とじる</button></div>
+    <div class="preview" id="editPreview"></div>
+    <div class="photo" id="photoBox">
+      <img id="photoImg" alt="" hidden>
+      <span id="photoEmpty">写真を追加</span>
+      <input type="file" id="photoInput" accept="image/*" hidden>
+    </div>
+    <button type="button" class="link small" id="photoRemove" hidden>写真を外す</button>
+    <label>商品名<input name="name" maxlength="80" required></label>
     <div class="row">
       <label>状態<select name="status">
         <option value="stock">在庫</option><option value="listed">出品中</option><option value="sold">売却済</option>
@@ -154,20 +213,25 @@
       <label>販売先<select name="platform"></select></label>
     </div>
     <div class="row">
-      <label>仕入れ値<input name="cost" type="number" min="0"></label>
-      <label>販売価格<input name="price" type="number" min="0"></label>
+      <label>仕入れ値<input name="cost" type="number" inputmode="numeric" min="0"></label>
+      <label>販売価格<input name="price" type="number" inputmode="numeric" min="0"></label>
     </div>
     <div class="row">
       <label>配送方法<select name="shipping"></select></label>
-      <label>梱包材など<input name="extra" type="number" min="0"></label>
+      <label>梱包材など<input name="extra" type="number" inputmode="numeric" min="0"></label>
     </div>
     <div class="row">
       <label>仕入日<input name="boughtAt" type="date"></label>
-      <label>売却日<input name="soldAt" type="date"></label>
+      <label>出品日<input name="listedAt" type="date"></label>
     </div>
     <div class="row">
-      <button value="delete" class="danger">削除</button>
-      <button value="cancel" class="secondary">キャンセル</button>
+      <label>売却日<input name="soldAt" type="date"></label>
+      <label>仕入れ先<input name="supplier" maxlength="40" placeholder="例: ブックオフ"></label>
+    </div>
+    <label>メモ<textarea name="memo" rows="2" maxlength="300" placeholder="状態・サイズ・保管場所など"></textarea></label>
+    <div class="row sheet-actions">
+      <button value="delete" class="danger" formnovalidate id="delBtn">削除</button>
+      <button value="duplicate" class="secondary" id="dupBtn">複製</button>
       <button value="save">保存</button>
     </div>
   </form>
@@ -175,6 +239,8 @@
 
 <script src="config.js"></script>
 <script src="license.js"></script>
+<script src="core.js"></script>
+<script src="db.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

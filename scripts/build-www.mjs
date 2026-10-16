@@ -1,7 +1,7 @@
 // Android アプリに同梱する Web ファイルを www/ にまとめる。
 import { cpSync, mkdirSync, rmSync, readFileSync, writeFileSync } from "node:fs";
 
-const FILES = ["index.html", "app.js", "styles.css", "config.js", "license.js", "manifest.json", "icon.svg"];
+const FILES = ["index.html", "app.js", "styles.css", "config.js", "license.js", "core.js", "db.js", "manifest.json", "icon.svg"];
 rmSync("www", { recursive: true, force: true });
 mkdirSync("www");
 for (const f of FILES) cpSync(f, `www/${f}`);

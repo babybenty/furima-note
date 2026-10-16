@@ -47,7 +47,7 @@
         <a class="btn btn-ghost" href="#features">機能を見る</a>
       </div>
       <ul class="chips">
-        <li>登録不要</li><li>30件まで無料</li><li>オフライン対応</li><li>データは端末内だけ</li>
+        <li>登録不要</li><li>30件まで無料</li><li>写真つき在庫管理</li><li>確定申告の集計</li><li>データは端末内だけ</li>
       </ul>
     </div>
     <div class="phone"><img src="img/screen-calc.webp" alt="フリマ帳の利益計算画面。販売価格9,800円で利益3,740円と表示" width="390" height="780"></div>
@@ -78,12 +78,12 @@
 
       <div class="feature">
         <div>
-          <h3>利益と「売るべき価格」がすぐ分かる</h3>
+          <h3>利益と「いくらで売るべきか」がすぐ分かる</h3>
           <p>販売先と配送方法を選んで、仕入れ値と販売価格を入れるだけ。</p>
           <ul>
             <li>手数料・送料・梱包材を引いた利益と利益率</li>
+            <li>赤字にならない最低価格（損益分岐）</li>
             <li>目標利益率から、必要な販売価格を逆算</li>
-            <li>手数料・送料は自由に編集でき、料金改定にも対応</li>
           </ul>
         </div>
         <div class="shot"><img src="img/screen-calc.webp" alt="利益計算画面" loading="lazy" width="390" height="780"></div>
@@ -91,28 +91,42 @@
 
       <div class="feature">
         <div>
-          <h3>在庫と売上を、そのまま記録</h3>
-          <p>計算した商品は「在庫として保存」「売れた！で保存」のワンタップで記録されます。</p>
+          <h3>どこで売るのが一番得？をひと目で</h3>
+          <p>同じ商品・同じ価格で、メルカリ・ラクマ・Yahoo!フリマなどに出したときの利益を並べて比べます。</p>
           <ul>
-            <li>在庫・出品中・売却済をひと目で管理</li>
-            <li>商品名で検索、タップで編集</li>
-            <li>商品ごとの利益が一覧で分かる</li>
+            <li>手数料の違いによる利益の差がすぐ分かる</li>
+            <li>いちばん得な販売先に印</li>
+            <li>BASE など、販売先や配送方法を自由に追加</li>
           </ul>
         </div>
-        <div class="shot"><img src="img/screen-items.webp" alt="在庫一覧画面" loading="lazy" width="390" height="780"></div>
+        <div class="shot"><img src="img/screen-compare.webp" alt="販売先ごとの利益を比べる画面" loading="lazy" width="390" height="780"></div>
       </div>
 
       <div class="feature">
         <div>
-          <h3>月別の成績と、売れ残りが見える</h3>
-          <p>年間の売上・利益・在庫金額と、月ごとの利益をグラフで表示します。</p>
+          <h3>在庫を、写真つきで管理</h3>
+          <p>計算した商品はワンタップで記録。売れたら「売却済」にするだけで帳簿ができあがります。</p>
           <ul>
-            <li>販売先別の利益比較<span class="pro-pill">PRO</span></li>
-            <li>仕入れから60日を過ぎた在庫をお知らせ<span class="pro-pill">PRO</span></li>
-            <li>確定申告用のCSVをExcel形式で出力<span class="pro-pill">PRO</span></li>
+            <li>商品写真・仕入れ先・メモを記録して検索</li>
+            <li>在庫・出品中・売却済の絞り込みと並べ替え（保有日数・利益順など）</li>
+            <li>編集中に価格を変えると利益が即座に変わる「値下げシミュレーション」</li>
           </ul>
         </div>
-        <div class="shot"><img src="img/screen-stats.webp" alt="集計画面。月別利益のグラフと販売先別の利益" loading="lazy" width="390" height="780"></div>
+        <div class="shot"><img src="img/screen-items.webp" alt="写真つきの在庫一覧" loading="lazy" width="390" height="780"></div>
+      </div>
+
+      <div class="feature">
+        <div>
+          <h3>確定申告の数字まで、自動で集計<span class="pro-pill">PRO</span></h3>
+          <p>副業の確定申告で一番面倒な「売上原価」と「経費」の集計を、日々の記録から自動で作ります。</p>
+          <ul>
+            <li>売上原価（期首在庫＋仕入−期末在庫）を自動計算</li>
+            <li>梱包資材のまとめ買い・交通費などの経費を記録</li>
+            <li>売上明細・経費明細・集計表のCSV出力と印刷</li>
+            <li>販売先別の分析、売れ残り在庫の損益分岐価格</li>
+          </ul>
+        </div>
+        <div class="shot"><img src="img/screen-tax.webp" alt="確定申告の集計画面" loading="lazy" width="390" height="780"></div>
       </div>
     </div>
   </section>
@@ -132,8 +146,9 @@
             <tr><td>売るべき価格の逆算</td><td class="us y">○</td><td class="n">—</td><td>自分で数式を作る</td></tr>
             <tr><td>在庫・売上の記録</td><td class="us y">○</td><td class="n">—</td><td class="y">○</td></tr>
             <tr><td>スマホで片手入力</td><td class="us y">○</td><td class="y">○</td><td class="n">やりにくい</td></tr>
-            <tr><td>月別グラフ・売れ残りの把握</td><td class="us y">○</td><td class="n">—</td><td>自分で作る</td></tr>
-            <tr><td>確定申告用CSV</td><td class="us y">○</td><td class="n">—</td><td>自分で整える</td></tr>
+            <tr><td>販売先ごとの利益比較</td><td class="us y">○</td><td class="n">—</td><td>自分で作る</td></tr>
+            <tr><td>写真つきの在庫管理</td><td class="us y">○</td><td class="n">—</td><td class="n">やりにくい</td></tr>
+            <tr><td>売上原価・経費・所得の集計</td><td class="us y">○</td><td class="n">—</td><td>自分で整える</td></tr>
           </tbody>
         </table>
       </div>
@@ -168,9 +183,10 @@
           <div class="amount">¥0</div>
           <p class="note">ずっと無料</p>
           <ul>
-            <li>利益計算・価格の逆算</li>
-            <li>商品登録 30件まで</li>
-            <li>売上・利益・月別グラフ</li>
+            <li>利益計算・損益分岐・価格の逆算</li>
+            <li>販売先くらべ</li>
+            <li>写真つきの在庫管理（30件まで）</li>
+            <li>売上・利益の月別グラフ</li>
             <li>バックアップと復元</li>
           </ul>
           <a class="btn btn-ghost" href="./">無料で使ってみる</a>
@@ -182,10 +198,11 @@
           <p class="note">一度のお支払いで、ずっと使えます（税込）</p>
           <ul>
             <li>商品登録 無制限</li>
-            <li>確定申告用CSVエクスポート</li>
-            <li>販売先別の利益分析</li>
-            <li>売れ残り在庫のお知らせ</li>
-            <li>広告なし</li>
+            <li>確定申告の集計（売上原価・経費・所得）</li>
+            <li>経費の記録</li>
+            <li>CSV出力（売上・経費・集計表）と印刷</li>
+            <li>販売先別の分析・売れ残りの損益分岐価格</li>
+            <li>月額料金なしの買い切り</li>
           </ul>
           <a class="btn btn-primary" href="./#pro">アプリからPROを購入</a>
         </div>

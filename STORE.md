@@ -58,7 +58,7 @@ https://play.google.com/console →「アプリを作成」
 | 詳しい説明 | 下の「詳しい説明」をコピー |
 | アプリのアイコン | `store/icon-512.png` |
 | フィーチャー グラフィック | `store/feature-graphic.png` |
-| スマートフォンのスクリーンショット | `store/screen-1-calc.png`、`store/screen-2-items.png`、`store/screen-3-stats.png` |
+| スマートフォンのスクリーンショット | `store/screen-1-calc.png`、`store/screen-2-compare.png`、`store/screen-3-items.png`、`store/screen-4-stats.png` |
 | カテゴリ | 仕事効率化 |
 | メールアドレス | kodomo.manabi.lab@gmail.com |
 | ウェブサイト | https://babybenty.github.io/furima-note/about.html |
